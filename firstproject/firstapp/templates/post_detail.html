@@ -1,7 +1,24 @@
 {% extends 'base.html' %}
 
 {% block content %}
+  <h1>{{ post_detail.title }}</h1>
+  <p>{{ post_detail.text }}</p>
 
-{{ post_detail.text }}
+  <h2>Comments</h2>
+  <ul>
+    {% for comment in comments %}
+      <li>
+        <p>{{ comment.user.username }}: {{ comment.text }}</p>
+      </li>
+    {% empty %}
+      <li>No comments yet.</li>
+    {% endfor %}
+  </ul>
 
+  <h3>Add a Comment</h3>
+  <form method="post" action="{% url 'add_comment' post_detail.pk %}">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
 {% endblock %}

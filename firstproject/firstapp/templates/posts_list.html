@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{%for i in posts%}
+<h1>Post {{i.id}}</h1>
+<a href="{% url 'post_detail' i.id %}">Детальнее</a>
+{% endfor %}

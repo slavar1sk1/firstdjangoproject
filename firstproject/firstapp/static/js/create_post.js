@@ -11,10 +11,13 @@ $(function() {
         'text': text
       },
       success: function(response) {
-        console.log(response);
+        $('#posts_list').html(response)
+        document.getElementById('window_post').close();
       },
       error: function(xhr, status, error) {
         console.error(xhr.responseText);
+        document.getElementById('window_post').close();
+
       }
     });
   });

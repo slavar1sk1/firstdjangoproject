@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{%for i in posts%}
+<div id="posts_list">
+    {%for i in posts%}
 <h1>Post {{i.id}}</h1>
 <a href="{% url 'post_detail' i.id %}">Детальнее</a>
 {% endfor %}
+</div>
 {% endblock %}
