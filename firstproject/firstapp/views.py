@@ -6,15 +6,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from .models import User, Post, Comment
+from .models import User, Post, Comment, Like
 from .forms import PostCreateForm, RegistrationForm, LoginForm, CommentForm
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic import View
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
 
 
-__all__ = ('HomeView', 'RegistrationView', 'UserLoginView', 'PostDetailView', 'PostCommentView')
+__all__ = ('HomeView', 'RegistrationView', 'UserLoginView', 'PostDetailView', 'PostCommentView', 'LikePostView', 'DeleteCommentView')
 
 
 class HomeView(LoginRequiredMixin, ListView):
@@ -72,6 +74,7 @@ class PostDetailView(DetailView):
         context['comment_form'] = CommentForm()
         return context
 
+
 class PostCommentView(SingleObjectMixin, View):
     model = Post
     form_class = CommentForm
@@ -85,8 +88,39 @@ class PostCommentView(SingleObjectMixin, View):
             comment.user = request.user
             comment.post = self.object
             comment.save()
-            return redirect('post_detail', pk=self.object.pk)
 
-        context = self.get_context_data(object=self.object)
-        context['comment_form'] = form
-        return self.render_to_response(context)
+        response = render_to_string('comment_list.html',
+                                    context={'comments': Comment.objects.filter(post=self.object).order_by('-create_at')})
+
+        return JsonResponse(response, safe=False)
+
+
+class DeleteCommentView(View):
+    def get(self, request, *args, **kwargs):
+        Comment.objects.get(id=self.kwargs['id']).delete()
+
+        response = render_to_string('comment_list.html',
+                                    context={
+                                        'comments': Comment.objects.filter(post=self.object).order_by('-create_at')})
+
+        return HttpResponse(response)
+
+
+class LikePostView(LoginRequiredMixin, View):
+    def post(self, request, post_id, *args, **kwargs):
+        post = get_object_or_404(Post, pk=post_id)
+        user = request.user
+
+        if Like.objects.filter(user=user, post=post).exists():
+            return JsonResponse({"success": False, "message": "User already liked this post."})
+
+        Like.objects.create(user=user, post=post)
+        post.likes_count += 1
+        post.save()
+
+        return JsonResponse({"success": True, "likes_count": post.likes_count})
+
+
+
+
+

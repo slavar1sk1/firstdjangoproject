@@ -7,4 +7,7 @@ urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
     path('post_detail/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
     path('post/<int:pk>/comment/', PostCommentView.as_view(), name='add_comment'),
+    path('comment/<int:id>/delete', DeleteCommentView.as_view(), name='delete_comment'),
+    path('like_post/<int:post_id>/', LikePostView.as_view(), name='like_post'),
+
 ]
