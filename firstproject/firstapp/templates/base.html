@@ -25,10 +25,14 @@
     {% csrf_token %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-2 border border-end position-fixed vh-100">
+            <div class="col-12 d-block d-sm-none">
+
+            </div>
+            <div class="col-md-2 col-sm-1 d-none d-sm-block border border-end vh-100">
+
                 <button id="create_post">Create Post</button>
             </div>
-            <div class="col-2"></div>
+
             <div class="col-10">
                 {% block content %}
                 {% endblock %}
@@ -45,7 +49,7 @@
 
         </div>
 
-        <button id="submit" data-url="{% url 'index' %}" class="btn">Create post</button>
+        <button id="submit" data-url="{% url 'create_post' %}" class="btn">Create post</button>
 
     </dialog>
 

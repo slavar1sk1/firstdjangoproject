@@ -16,7 +16,8 @@ from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
 
 
-__all__ = ('HomeView', 'RegistrationView', 'UserLoginView', 'PostDetailView', 'PostCommentView', 'LikePostView', 'DeleteCommentView')
+__all__ = ('HomeView', 'RegistrationView', 'UserLoginView', 'PostDetailView', 'PostCommentView', 'LikePostView',
+           'DeleteCommentView', 'PostCreateView', 'HomeLikeView')
 
 
 class HomeView(LoginRequiredMixin, ListView):
@@ -108,19 +109,61 @@ class DeleteCommentView(View):
 
 class LikePostView(LoginRequiredMixin, View):
     def post(self, request, post_id, *args, **kwargs):
+
         post = get_object_or_404(Post, pk=post_id)
         user = request.user
 
-        if Like.objects.filter(user=user, post=post).exists():
-            return JsonResponse({"success": False, "message": "User already liked this post."})
+        user_like = Like.objects.filter(user=user, post=post).first()
 
-        Like.objects.create(user=user, post=post)
-        post.likes_count += 1
+        if user_like:
+            # Если лайк существует, удалить его
+            user_like.delete()
+            post.likes_count -= 1
+        else:
+            # Если лайк не существует, создать его
+            Like.objects.create(user=user, post=post)
+            post.likes_count += 1
+
         post.save()
-
         return JsonResponse({"success": True, "likes_count": post.likes_count})
 
 
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostCreateForm
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        super().form_valid(form)
+
+        html_post = render_to_string(
+            'posts_list.html',
+            context={
+                'posts': Post.objects.filter(user=self.request.user).order_by('-created_at')
+            }
+        )
+
+        return JsonResponse(html_post, safe=False)
+
+
+class HomeLikeView(LoginRequiredMixin, View):
+    def post(self, request, post_id, *args, **kwargs):
+
+        post = get_object_or_404(Post, pk=post_id)
+        user = request.user
+
+        user_like = Like.objects.filter(user=user, post=post).first()
+
+        if user_like:
+            # Если лайк существует, удалить его
+            user_like.delete()
+            post.likes_count -= 1
+        else:
+            # Если лайк не существует, создать его
+            Like.objects.create(user=user, post=post)
+            post.likes_count += 1
+
+        post.save()
+        return JsonResponse({"success": True, "likes_count": post.likes_count})
 
 
