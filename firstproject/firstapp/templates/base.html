@@ -41,17 +41,17 @@
     </div>
 
     <dialog id="window_post" class="create_post">
-        <h1>Create Post</h1>
+    <h1>Create Post</h1>
 
-        <div class="input-box">
-          {% csrf_token %}
-          {{form}}
+    <div class="input-box">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+        </form>
+    </div>
 
-        </div>
-
-        <button id="submit" data-url="{% url 'create_post' %}" class="btn">Create post</button>
-
-    </dialog>
+    <button id="submit" data-url="{% url 'create_post' %}" class="btn">Create post</button>
+</dialog>
 
 </body>
 </html>

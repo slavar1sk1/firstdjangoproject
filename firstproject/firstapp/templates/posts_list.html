@@ -1,4 +1,8 @@
-{%for i in posts%}
-<h1>Post {{i.id}}</h1>
-<a href="{% url 'post_detail' i.id %}">Детальнее</a>
+{% for post in posts %}
+    <h1>Post {{ post.id }}</h1>
+    <a href="{% url 'post_detail' post.id %}">Детальнее</a>
+    <button class="like_button" data-url="{% url 'like_home' post.id %}" data-post-id="{{ post.id }}">
+            Like (<span id="like_count_{{ post.id }}">{{ post.likes_count }}</span>)
+        </button>
 {% endfor %}
+

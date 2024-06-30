@@ -46,8 +46,9 @@ class HomeView(LoginRequiredMixin, ListView):
                     'posts': Post.objects.filter(user=self.request.user).order_by('-create_at')
                 }
             )
-
-        return JsonResponse(html_post, safe=False)
+            return JsonResponse({'html': html_post}, safe=False)
+        else:
+            return JsonResponse(form.errors, status=400)
 
 
 class RegistrationView(CreateView):
@@ -134,12 +135,12 @@ class PostCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        super().form_valid(form)
+        post = form.save()
 
         html_post = render_to_string(
             'posts_list.html',
             context={
-                'posts': Post.objects.filter(user=self.request.user).order_by('-created_at')
+                'posts': Post.objects.filter(user=self.request.user).order_by('-create_at')
             }
         )
 
