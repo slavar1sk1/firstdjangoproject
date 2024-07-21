@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="/static/js/create_post.js"></script>
+
     <link rel="stylesheet" href="/static/css/make_post.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,9 +20,12 @@
     <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
     {% block js %}
     {% endblock %}
+    <script src="/static/js/create_post.js"></script>
+
 </head>
 <body>
     {% csrf_token %}
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 d-block d-sm-none">
@@ -31,6 +34,7 @@
             <div class="col-md-2 col-sm-1 d-none d-sm-block border border-end vh-100">
 
                 <button id="create_post">Create Post</button>
+                <a class="profil" href="/profil">Profil</a>
             </div>
 
             <div class="col-10">
@@ -40,18 +44,28 @@
         </div>
     </div>
 
+
+
     <dialog id="window_post" class="create_post">
     <h1>Create Post</h1>
 
     <div class="input-box">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" id="post_form">
             {% csrf_token %}
             {{ form.as_p }}
         </form>
     </div>
 
-    <button id="submit" data-url="{% url 'create_post' %}" class="btn">Create post</button>
+    <button class="btn"
+            hx-post="{% url 'create_post' %}"
+            hx-include="#post_form"
+            hx-target="#posts_list"
+    >
+        Create post
+    </button>
+
 </dialog>
+
 
 </body>
 </html>

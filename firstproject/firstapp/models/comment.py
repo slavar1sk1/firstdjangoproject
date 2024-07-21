@@ -7,8 +7,8 @@ __all__ = ('Comment', )
 
 class Comment(TimeControlModel):
     text = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
 
 
     def __str__(self):

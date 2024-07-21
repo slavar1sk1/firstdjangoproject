@@ -1,4 +1,4 @@
-$(function () {
+function like () {
   $(".like_button").click(function () {
     var button = $(this);
     var post_id = button.data("post-id");
@@ -18,4 +18,8 @@ $(function () {
       }
     });
   });
-});
+};
+
+$(document).ready(function() {
+    like()
+    })

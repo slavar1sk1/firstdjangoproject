@@ -17,7 +17,7 @@ from django.shortcuts import get_object_or_404
 
 
 __all__ = ('HomeView', 'RegistrationView', 'UserLoginView', 'PostDetailView', 'PostCommentView', 'LikePostView',
-           'DeleteCommentView', 'PostCreateView', 'HomeLikeView')
+           'DeleteCommentView', 'PostCreateView', 'HomeLikeView', 'ProfilView')
 
 
 class HomeView(LoginRequiredMixin, ListView):
@@ -144,7 +144,7 @@ class PostCreateView(CreateView):
             }
         )
 
-        return JsonResponse(html_post, safe=False)
+        return HttpResponse(html_post)
 
 
 class HomeLikeView(LoginRequiredMixin, View):
@@ -156,11 +156,9 @@ class HomeLikeView(LoginRequiredMixin, View):
         user_like = Like.objects.filter(user=user, post=post).first()
 
         if user_like:
-            # Если лайк существует, удалить его
             user_like.delete()
             post.likes_count -= 1
         else:
-            # Если лайк не существует, создать его
             Like.objects.create(user=user, post=post)
             post.likes_count += 1
 
@@ -168,3 +166,15 @@ class HomeLikeView(LoginRequiredMixin, View):
         return JsonResponse({"success": True, "likes_count": post.likes_count})
 
 
+class ProfilView(LoginRequiredMixin, View):
+    template_name = "profil.html"
+
+    def get(self, request, *args, **kwargs):
+        posts = request.user.posts.all()
+        likes_count_list = [post.likes_count for post in posts]
+        context = {
+            'posts_amound': request.user.posts.count(),
+            'like_sum': sum(likes_count_list)
+        }
+        print(context['like_sum'])
+        return render(request, self.template_name, context)
