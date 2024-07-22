@@ -1,0 +1,43 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: linear-gradient(45deg, #46ac81, #2cdd70, #74e053);
+}
+
+.btn-primary {
+  position: fixed;
+  margin-left: 20px;
+  margin-top: 60px;
+}
+
+.btn-warning {
+  position: fixed;
+  margin-left: 95px;
+  margin-top: 60px;
+}
+
+.dabl {
+  margin-left: 70px;
+  font-weight: 700;
+  font-size: 40px;
+  position: fixed;
+}
+
+#posts_list {
+  margin-left: 200px;
+}
+
+.alert-dark {
+  width: 500px;
+}
+
+.dabl-border {
+  border: 2px solid white; /* Белая обводка */
+  padding: 10px; /* Внутренний отступ */
+  border-radius: 10px; /* Скругленные углы */
+  background-color: rgba(0, 0, 0, 0.3); /* Полупрозрачный фон */
+  height: 100%; /* Убедитесь, что div занимает всю высоту родителя */
+  box-sizing: border-box; /* Учитывает padding и border в общей ширине и высоте элемента */
+}

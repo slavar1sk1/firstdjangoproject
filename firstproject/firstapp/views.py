@@ -16,6 +16,7 @@ from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
 
 
+
 __all__ = ('HomeView', 'RegistrationView', 'UserLoginView', 'PostDetailView', 'PostCommentView', 'LikePostView',
            'DeleteCommentView', 'PostCreateView', 'HomeLikeView', 'ProfilView')
 
@@ -173,8 +174,13 @@ class ProfilView(LoginRequiredMixin, View):
         posts = request.user.posts.all()
         likes_count_list = [post.likes_count for post in posts]
         context = {
+            'username': request.user.username, 
             'posts_amound': request.user.posts.count(),
             'like_sum': sum(likes_count_list)
         }
         print(context['like_sum'])
         return render(request, self.template_name, context)
+
+
+
+  

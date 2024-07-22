@@ -3,16 +3,15 @@
 }
 
 .create_post {
-   width: 600px;
-   height: 400px;
-  background: rgb(173, 27, 202);
-    flex-direction: column;
+  width: 600px;
+  height: 400px;
+  background: rgb(40, 236, 220);
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
 }
 
 .create_post h1 {

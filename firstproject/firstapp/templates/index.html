@@ -1,17 +1,26 @@
-{% extends 'base.html' %}
-
-{% block js %}
+{% extends 'base.html' %} {% block js %}
 <script src="/static/js/like_home.js"></script>
-{% endblock %}
+<link rel="stylesheet" href="/static/css/index.css" />
+{% endblock %} {% block content %}
 
-{% block content %}
 <div id="posts_list">
-    {% for post in posts %}
-        <h1>Post {{ post.id }}</h1>
-        <a href="{% url 'post_detail' post.id %}">Детальнее</a>
-        <button class="like_button" data-url="{% url 'like_home' post.id %}" data-post-id="{{ post.id }}">
-            Like (<span class="like_button" id="like_count_{{ post.id }}">{{ post.likes_count }}</span>)
-        </button>
-    {% endfor %}
+  {% for post in posts %}
+  <div class="alert alert-dark">
+    <h1 class="post_num">Post {{ post.id }}</h1>
+    <a class="btn btn-success" href="{% url 'post_detail' post.id %}"
+      >Детальнее</a
+    >
+    <button
+      class="like_button btn btn-danger"
+      data-url="{% url 'like_home' post.id %}"
+      data-post-id="{{ post.id }}"
+    >
+      Like (<span class="like_button" id="like_count_{{ post.id }}"
+        >{{ post.likes_count }}</span
+      >)
+    </button>
+  </div>
+  {% endfor %}
 </div>
+
 {% endblock %}
